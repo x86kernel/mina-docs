@@ -2,55 +2,55 @@ import Page from "@reason/pages/Docs";
 import DocLink from "@reason/components/DocLink";
 export default Page({ title: "Send a Payment" });
 
-# Send a payment with Mina
+# 미나를 이용해서 지불해보기
 
-In this section, we'll give a brief overview on how to send a transaction with the Mina client and how to get started with interacting with the blockchain.
+이 섹션에서는 미나 클라이언트를 이용해서 트랜잭션을 보내는 방법과 블록체인과 상호작용 하는 방법에 대한 간략한 개요를 제공합니다.
 
-## Using an offline signed-transaction
+## 오프라인에서 서명된 트랜잭션 사용하기
 
-If you want to send a transaction without running a node yourself, but by delegating to someone else running anode, keep following along here. If you wish to send the transaction directly with a running node, skip to [using a connected node](#using-a-connected-node).
+트랜잭션을 보내고 싶지만 노드를 직접 실행하지 않는 경우, 노드를 실행하고 있는 다른사람에게 위임하면 됩니다. 실행중인 노드를 통해 트랜잭션을 보내고 싶으시면, [연결된 노드 사용하기](#using-a-connected-node)로 넘어가시면 됩니다.
 
-### Using a Ledger device
+### 렛저(Ledger) 장치 사용
 
-To generate a signed transaction offline if your private key is on a Ledger device, see <DocLink copy="Ledger Offline Mode" url="/advanced/ledger-app-mina#offline-mode" />.
+개인키가 렛저 장치에 있는 경우 서명된 트랜잭션을 오프라인으로 생성하려면 <DocLink copy="렛저 오프라인 모드" url="/advanced/ledger-app-mina#offline-mode" />를 참조하시기 바랍니다.
 
-### Using a keypair generated with the generate-keypair tool
+### generate-keypair 툴로 생성된 키 쌍 사용
 
-Coming soon a better tool -- see https://github.com/MinaProtocol/mina/issues/8928 , for now, please use the workaround provided in a comment on that issue.
+더 나은 툴이 출시될 예정입니다. https://github.com/MinaProtocol/mina/issues/8928 를 참조하시기 바랍니다. 일단 지금은 해당 이슈 답변에 달려있는 해결 방법을 이용하시기 바랍니다.
 
-### Using a keypair generated with the offline client-sdk
+### client-sdk 로 생성된 키 쌍 사용
 
-To generate a signed transaction using the client-sdk, log the signed payment created as shown on the [client-sdk readme page](https://github.com/MinaProtocol/mina/tree/develop/frontend/client_sdk).
+client-sdk 를 사용하여 서명된 트랜잭션을 생성하려면 [client-sdk readme page](https://github.com/MinaProtocol/mina/tree/develop/frontend/client_sdk) 를 참고하시기 바랍니다.
 
-### Send the transaction
+### 트랜잭션 보내기
 
-You can use a hosted service to broadcast your signed transaction. Sending your signed transaction _does not_ leak your private key.
+호스팅 되고있는 서비스를 사용하여 서명된 트랜잭션을 날릴 수 있습니다. 서명된 트랜잭션을 날릴때 _개인키가 노출되지 않습니다_.
 
-Transactions signed with the client-sdk can use [https://minaexplorer.com/broadcast-tx](https://minaexplorer.com/broadcast-tx)
+client-sdk 로 서명된 트랜잭션은 [https://minaexplorer.com/broadcast-tx](https://minaexplorer.com/broadcast-tx) 를 사용하시면 됩니다.
 
-Transactions signed with the ledger can use [https://minaexplorer.com/broadcast-ledger](https://minaexplorer.com/broadcast-ledger)
+렛저 장치로 서명된 트랜잭션은 [https://minaexplorer.com/broadcast-ledger](https://minaexplorer.com/broadcast-ledger) 를 사용하시면 됩니다.
 
-## Using a connected node
+## 연결된 노드 사용
 
-We are assuming in the rest of section that you have the Mina client installed on your system, if you do not have Mina installed please see the <DocLink copy="Getting Started" url="/using-mina/getting-started" />.
+나머지 섹션에서 시스템에 미나 클라이언트가 설치되어 있다고 가정하며, 미나가 설치되어 있지 않은 경우 <DocLink copy="시작하기" url="/using-mina/getting-started" />를 참조하시기 바랍니다.
 
-## Import your account
+## 계정 가져오기
 
-Once our node is synced, we'll need to import our public/private keypair so that we can sign transactions and generate an address to receive payments. For security reasons, we'll want to put the keys under a directory that is harder for attackers to access.
+노드가 동기화되면 트랜잭션에 서명하고 지불을 받을 주소를 생성할 수 있도록 공개/개인키 쌍을 가져와야 합니다. 보안상의 이유로 공격자가 접근하기 어려운 디렉토리에 키를 배치하려고 합니다.
 
-Run the following command to import your <DocLink copy="previously generated" url="/using-mina/keypair" /> keypair file:
+아래의 명령을 실행하여 <DocLink copy="이전에 생성된" url="/using-mina/keypair" /> 키 쌍 파일을 가져옵니다.
 
     mina accounts import -privkey-path ~/keys/my-wallet
 
-You will be prompted for the password you entered when the account was created.
+계정을 만들 때 입력했던 암호를 묻는 메시지가 표시될 것입니다.
 
 <Alert kind="warning">
 
-The public key can be shared freely with anyone, but be very careful with your private key file. Never share this private key with anyone, as it is the equivalent of a password for your funds.
+공개키는 누구와도 자유롭게 공유해도 되지만, 개인키 파일은 매우 조심해야 합니다. 개인키는 귀하의 자금에 대한 암호와 동일하므로 누구와도 공유하지 마시기 바랍니다.
 
 </Alert>
 
-The response from this command will look like this:
+해당 명령의 응답은 다음과 같습니다.
 
     😄 Imported account!
     Public key: B62qjaA4N9843FKM5FZk1HmeuDiojG42cbCDyZeUDQVjycULte9PFkC

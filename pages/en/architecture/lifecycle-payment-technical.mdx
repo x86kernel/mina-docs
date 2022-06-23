@@ -13,10 +13,10 @@ Then you invoke the following command:
 
 ```bash
 $ mina client send-payment \
-    -amount 10 \
-    -receiver KEFLx5TOqJNzd6buc+dW3HCjkL57NjnZIaplYJ50DO1uTfogKfwAAAAA \
-    -fee 3 \
-    -privkey-path keys/my-wallet
+    --amount 10 \
+    --receiver KEFLx5TOqJNzd6buc+dW3HCjkL57NjnZIaplYJ50DO1uTfogKfwAAAAA \
+    --fee 3 \
+    --privkey-path keys/my-wallet
 ```
 
 Where:
@@ -88,7 +88,7 @@ A payment is valid if:
 
 1. The signature is valid w.r.t. the public key of the sender
 2. The sender has enough balance to pay out the fee and the amount
-3. The reciever has enough room for the amount s.t. there won't be an overflow
+3. The receiver has enough room for the amount s.t. there won't be an overflow
 4. The [account nonce](#account-nonce) matches the nonce inside the payment.
 
 When we apply a payment we also cons it onto the [receipt chain](#receipt-chain-hash), and increment the account nonce.
@@ -112,7 +112,7 @@ How does it work?
 
 A merkle list is like a [merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) but with one branch. As long as you keep your merkle list hashes, you can prove that any individual piece of data was part of the list if you know for sure what the top hash is.
 
-If it's important to prove your payment went through, you ask the receiver to start recording receipt chain hashs, and hand your payment payload over to the receiver. He can then check the top hash of their receipt chain to see if it includes your payload.
+If it's important to prove your payment went through, you ask the receiver to start recording receipt chain hashes, and hand your payment payload over to the receiver. He can then check the top hash of their receipt chain to see if it includes your payload.
 
 ## Take a break!
 

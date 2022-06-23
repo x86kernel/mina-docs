@@ -11,18 +11,19 @@ In this section, we'll connect to the `Mainnet` network and send our first trans
 
 The first step in connecting to `Mainnet` is installing the latest daemon version. Follow the instructions for your operating system below.
 
-### Ubuntu 18.04 / Debian 9
+### Ubuntu 18.04, 20.04 / Debian 9, 10, 11
 
-First remove any previously installed version of the daemon to prevent any errors when upgrading to the latest version. Then you can install the latest version as follows:
+Follow along below to install the latest **Stable** [Mina Release 1.3.0](https://github.com/MinaProtocol/mina/releases/tag/1.3.0) or visit the [Github Releases Page](https://github.com/MinaProtocol/mina/releases) to discover and install pre-release (Beta) builds.
+
+You can set up the new `stable` package repository and install the latest version as follows:
 
 ```
-sudo apt-get remove -y mina-testnet-postake-medium-curves
-echo "deb [trusted=yes] http://packages.o1test.net release main" | sudo tee /etc/apt/sources.list.d/mina.list
+echo "deb [trusted=yes] http://packages.o1test.net $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/mina.list
 sudo apt-get update
-sudo apt-get install -y curl unzip mina-mainnet=1.1.5-a42bdee
+sudo apt-get install -y curl unzip mina-mainnet=1.3.0-9b0369c
 ```
 
-Check that daemon installed correctly by running `mina version`. The output should read `Commit a42bdeef6b0c15ee34616e4df76c882b0c5c7c2a on branch master`.
+Check that daemon installed correctly by running `mina version`. The output should read `Commit 9b0369c27bb85c8ab2f8725c6e977eb27b53b826 on branch master`.
 
 ## Start up a node
 
@@ -35,12 +36,12 @@ Note: If you are using the Hetzner hosting provider, we are currently experienci
 Run the following command to start up a Mina node instance and connect to the live network:
 
 ```
-mina daemon --generate-genesis-proof true --peer-list-url https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt
+mina daemon --peer-list-url https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt
 ```
 
 If you have a key with stake and would like to produce blocks, also provide `--block-producer-key ~/keys/my-wallet`, replacing `~/keys/my-wallet` with the path to your private key if not the default.
 
-The `-peer-list` argument specified above refer to the seed peer address - this is the initial peer we will connect to on the network. Since Mina is a <DocLink copy="peer-to-peer" url="/glossary#peer-to-peer" /> protocol, there is no single centralized server we rely on.
+The `--peer-list` argument specified above refer to the seed peer address - this is the initial peer we will connect to on the network. Since Mina is a <DocLink copy="peer-to-peer" url="/glossary#peer-to-peer" /> protocol, there is no single centralized server we rely on.
 
 See <DocLink copy="here" url="/troubleshooting" /> for common issues when first running a node.
 
@@ -48,26 +49,25 @@ You're not done yet! Now that you've confirmed things are okay by running the st
 
 First kill the existing `mina daemon` process with `Ctrl-C`, and then keep reading:
 
-### Ubuntu 18.04 / Debian 9
+### Creating your .mina-env
 
-Ensure your private-key that you've registered with is located at `~/keys/my-wallet`.
-
-Add a file `~/.mina-env` containing the following:
+To produce blocks or otherwise customize the configuration for the mina daemon, create a file `~/.mina-env` containing the following:
 
 ```
-CODA_PRIVKEY_PASS="private key password"
-EXTRA_FLAGS=" --file-log-level Debug"
+MINA_PRIVKEY_PASS="My_V3ry_S3cure_Password"
+LOG_LEVEL=Info
+FILE_LOG_LEVEL=Debug
+EXTRA_FLAGS=" --block-producer-key <BLOCK_PRODUCER_KEY_PATH>"
 ```
+Ensure to replace <BLOCK_PRODUCER_KEY_PATH> with the full path to your block producer private key, for example, `/home/ubuntu/keys/my-wallet`.
 
-You can add extra flags later to `EXTRA_FLAGS` as you see fit.
+If you do not intend to produce blocks then you can keep ~/.mina-env empty for now.
 
-Mina will be looking for its peers in a file called `~/peers.txt`, so run the following command to create it:
+To change how mina is configured, simply specify flags to the mina daemon process with space-separated arguments between the quotes in `EXTRA_FLAGS=""`.
 
-```
-curl https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt > ~/peers.txt
-```
+The mina systemd service no longer expects a peers.txt file, it just uses the PEER_LIST_URL variable to determine where to fetch initial peers from, and the PEER_LIST_URL for the mainnet package defaults to https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt .
 
-Then run the following commands to start up a Mina node instance and connect to the live network:
+Once your .mina-env is ready, run the following commands to start up a Mina node instance and connect to the live network:
 
 ```
 systemctl --user daemon-reload
@@ -125,22 +125,30 @@ chmod 600 ~/keys/my-wallet
 mkdir ~/.mina-config
 ```
 
-Now simply run the image with your keys and ~/.mina-config mounted:
+To produce blocks or otherwise customize the configuration for the mina daemon, create a file `~/.mina-env` containing the following:
+
+```
+export MINA_PRIVKEY_PASS="My_V3ry_S3cure_Password"
+LOG_LEVEL=Info
+FILE_LOG_LEVEL=Debug
+EXTRA_FLAGS=" --block-producer-key <BLOCK_PRODUCER_KEY_PATH>"
+PEER_LIST_URL=https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt
+```
+Ensure to replace <BLOCK_PRODUCER_KEY_PATH> with the full path to your block producer private key, for example, `/home/ubuntu/keys/my-wallet`.
+
+If you do not intend to produce blocks then you can keep ~/.mina-env empty except for the PEER_LIST_URL.
+
+Now simply run the image with your keys, ~/.mina-env, and ~/.mina-config mounted into the container:
 
 ```
 docker run --name mina -d \
 -p 8302:8302 \
 --restart=always \
---mount "type=bind,source=`pwd`/keys,dst=/keys,readonly" \
---mount "type=bind,source=`pwd`/.mina-config,dst=/root/.mina-config" \
--e CODA_PRIVKEY_PASS="YOUR PASSWORD HERE" \
-minaprotocol/mina-daemon-baked:1.1.5-a42bdee \
-daemon \
---block-producer-key /keys/my-wallet \
---insecure-rest-server \
---file-log-level Debug \
---log-level Info \
---peer-list-url https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt
+--mount "type=bind,source=$(pwd)/.mina-env,dst=/entrypoint.d/mina-env,readonly" \
+--mount "type=bind,source=$(pwd)/keys,dst=/keys,readonly" \
+--mount "type=bind,source=$(pwd)/.mina-config,dst=/root/.mina-config" \
+minaprotocol/mina-daemon:1.3.0-9b0369c-bullseye-mainnet \
+daemon
 ```
 
 Run `docker logs -f mina` to follow the logs, and if it crashes save the log output to a file with `docker logs mina > mina-log.txt` and post the output to the #mentor-nodes channel or attach the full ~/.mina-config/mina.log to a github issue and link the issue in discord.
@@ -149,7 +157,7 @@ Run `docker exec -it mina mina client status` to monitor connectivity to the net
 
 <Alert>
 
-If you encounter `[Warn] Shutdown before Coda instance was created, not saving a visualization` when attempting to run your Docker container, [increase the resources that the Docker container is allowed to use](https://docs.docker.com/config/containers/resource_constraints/).
+If you encounter `[Warn] Shutdown before Mina instance was created, not saving a visualization` when attempting to run your Docker container, [increase the resources that the Docker container is allowed to use](https://docs.docker.com/config/containers/resource_constraints/).
 
 </Alert>
 
@@ -162,10 +170,6 @@ Now that we've started up a node and are running the Mina daemon, open up anothe
 <Alert>
 
 It may take up to a minute before `mina client status` connects to the daemon when first starting up. So if you see `Error: daemon not running. See mina daemon`, just a wait a bit and try again.
-
-If you are using the <DocLink copy="GetSandbox Nodeing" url="/developers/sandbox-node" />, due to a quirk in the way we communicate for the mina client status command, you will need to run `mina client status` inside the container itself:
-
-`docker exec -it mina bash`
 
 </Alert>
 
@@ -187,9 +191,3 @@ If you the `Bootstrap` state persists for more than an hour, there may be an iss
 ## Stepping up your game
 
 Now that we have a fully synced node, we can learn about some of the more advanced features of the daemon such as <DocLink copy="Sending a payment" url="/using-mina/send-payment" /> and <DocLink copy="Staking & Delegating" url="/using-mina/staking" />. And if you want to earn more tokens, check out the <DocLink copy="Foundation Delegation Program" url="/advanced/foundation-delegation-program" />.
-
-<span id="disclaimer">
-
-\*_Testnet Points are designed solely to track contributions to the Testnet and Testnet Points have no cash or other monetary value. Testnet Points are not transferable and are not redeemable or exchangeable for any cryptocurrency or digital assets. We may at any time amend or eliminate Testnet Points._
-
-</span>

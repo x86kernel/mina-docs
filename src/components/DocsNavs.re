@@ -121,24 +121,46 @@ module DocsNavsTranslations = {
     id: "sidenav.time-locked-accounts",
     defaultMessage: "Time-locked Accounts",
   };
-  let snapps = {id: "sidenav.snapps", defaultMessage: "Snapps"};
-  let tokens = {id: "sidenav.tokens", defaultMessage: "Tokens"};
-  let snarks = {id: "sidenav.snarks", defaultMessage: "SNARKs"};
-  let gettingStartedUsingSnarks = {
-    id: "sidenav.getting-starting-using-snarks",
-    defaultMessage: "Getting started using SNARKs",
+  let zkapps = {id: "sidenav.zkapps", defaultMessage: "zkApps"};
+  let zkAppsForEthereumDevelopers= {
+    id: "sidenav.zkapps-for-ethereum-developers",
+    defaultMessage: "zkApps for Ethereum Developers",
   };
-  let whichSnarkRightForMe = {
-    id: "sidenav.which-snark-right-for-me",
-    defaultMessage: "Which SNARK is right for me?",
+    let simpleAnonymousMessageBoardTutorial= {
+    id: "sidenav.simple-anonymous-message-board-tutorial",
+    defaultMessage: "Simple Anonymous Message Board Tutorial",
   };
-  let snarkyjsCryptoLibrary = {
-    id: "sidenav.snarkyjs-crypto-library",
-    defaultMessage: "The snarkyjs-crypto library",
+  let howZkAppsWork = {
+    id: "sidenav.how-zkapps-work",
+    defaultMessage: "How zkApps Work",
   };
-  let snarkyUniverseLibrary = {
-    id: "sidenav.snarky-universe-library",
-    defaultMessage: "The snarky-universe library",
+  let onlineCommunities = {
+    id: "sidenav.online-communities",
+    defaultMessage: "Online Communities",
+  };
+  let careers = {
+    id: "sidenav.careers",
+    defaultMessage: "Careers",
+  };
+  let grants = {
+    id: "sidenav.grants",
+    defaultMessage: "Grants & Programs",
+  };
+  let reporting = {
+    id: "sidenav.reporting",
+    defaultMessage: "Reporting Issues, Bugs, & Feature Requests",
+  };
+  let github  = {
+    id: "sidenav.github",
+    defaultMessage: "Github",
+  };
+  let howWriteZkApp = {
+    id: "sidenav.how-to-write-a-zkapp",
+    defaultMessage: "How To Write A zkApp",
+  };
+  let zkAppsAPIReference= {
+    id: "sidenav.api-reference",
+    defaultMessage: "SnarkyJS API Reference",
   };
   let troubleshooting = {
     id: "sidenav.troubleshooting",
@@ -146,10 +168,15 @@ module DocsNavsTranslations = {
   };
   let glossary = {id: "sidenav.glossary", defaultMessage: "Glossary"};
   let faq = {id: "sidenav.faq", defaultMessage: "FAQ"};
-  let exchangeFaq = {id: "sidenav.exchange-faq", defaultMessage: "Exchange FAQ"};
+  let exchangeFaq = {id: "sidenav.exchange-operators", defaultMessage: "Exchange Operators"};
+  let participate = {id: "sidenav.participate", defaultMessage: "Participate"};
   let contributingToMina = {
     id: "sidenav.contributing-to-mina",
     defaultMessage: "Contributing to Mina",
+  };
+  let grantoverview = {
+    id: "sidenav.grantoverview",
+    defaultMessage: "Overview",
   };
   let edit = {id: "sidenav.edit", defaultMessage: "Documentation"};
   let overview = {id: "sidenav.overview", defaultMessage: "Overview"};
@@ -348,26 +375,28 @@ module SideNav = {
             title={intl->Intl.formatMessage(timeLockedAccounts)}
             slug="timelock"
           />
-          <Item title={intl->Intl.formatMessage(snapps)} slug="snapps" />
-          <Item title={intl->Intl.formatMessage(tokens)} slug="tokens" />
         </Section>
-        <Section title={intl->Intl.formatMessage(snarks)} slug={f("snarks")}>
+        <Section title={intl->Intl.formatMessage(zkapps)} slug={f("zkapps")}>
           <Item title={intl->Intl.formatMessage(overview)} slug="" />
           <Item
-            title={intl->Intl.formatMessage(gettingStartedUsingSnarks)}
-            slug="snarky"
+            title={intl->Intl.formatMessage(howZkAppsWork)}
+            slug="how-zkapps-work"
           />
           <Item
-            title={intl->Intl.formatMessage(whichSnarkRightForMe)}
-            slug="constructions"
+            title={intl->Intl.formatMessage(howWriteZkApp)}
+            slug="how-to-write-a-zkapp"
           />
           <Item
-            title={intl->Intl.formatMessage(snarkyjsCryptoLibrary)}
-            slug="snarkyjs-crypto"
+            title={intl->Intl.formatMessage(zkAppsForEthereumDevelopers)}
+            slug="zkapps-for-ethereum-developers"
           />
           <Item
-            title={intl->Intl.formatMessage(snarkyUniverseLibrary)}
-            slug="snarky-universe"
+            title={intl->Intl.formatMessage(simpleAnonymousMessageBoardTutorial)}
+            slug="simple-anonymous-message-board-tutorial"
+          />
+           <Item
+            title={intl->Intl.formatMessage(zkAppsAPIReference)}
+            slug="snarkyjs-reference"
           />
         </Section>
         <Item
@@ -379,7 +408,34 @@ module SideNav = {
           slug={f("glossary")}
         />
         <Item title={intl->Intl.formatMessage(faq)} slug={f("faq")} />
-        <Item title={intl->Intl.formatMessage(exchangeFaq)} slug={f("exchange-faq")} />
+        <Item title={intl->Intl.formatMessage(exchangeFaq)} slug={f("exchange-operators")} />
+        <Section title={intl->Intl.formatMessage(participate)} slug={f("participate")}>
+        <Item
+          title={intl->Intl.formatMessage(onlineCommunities)}
+          slug="online-communities"
+        />
+        <Item
+        title={intl->Intl.formatMessage(careers)}
+        slug="careers"
+        />
+        <Item
+        title={intl->Intl.formatMessage(github)}
+        slug="github"
+      />
+        <Item
+        title={intl->Intl.formatMessage(reporting)}
+        slug="reporting"
+      />
+              <Section
+        title={intl->Intl.formatMessage(grants)}
+        slug={f("grants")}>
+
+        <Item
+        title={intl->Intl.formatMessage(grantoverview)}
+        slug="grantoverview"
+        />
+        </Section>
+      </Section>
       </SideNav>
     </div>;
   };
@@ -412,6 +468,8 @@ module Dropdown = {
     let currentLanguage = currentLanguageContext.currentLanguage;
     let language = toISOCode(currentLanguage);
     let f = url => {j|/$(language)/$(url)|j};
+
+    /* Below is the mobile navigation for mobile and tablets */
 
     <div className=Styles.dropdown>
       <DropdownNav
@@ -570,27 +628,29 @@ module Dropdown = {
             title={intl->Intl.formatMessage(timeLockedAccounts)}
             slug="timelock"
           />
-          <Item title={intl->Intl.formatMessage(snapps)} slug="snapps" />
-          <Item title={intl->Intl.formatMessage(tokens)} slug="tokens" />
         </Section>
-        <Section title={intl->Intl.formatMessage(snarks)} slug={f("snarks")}>
+        <Section title={intl->Intl.formatMessage(zkapps)} slug={f("zkapps")}>
           <Item title={intl->Intl.formatMessage(overview)} slug="" />
           <Item
-            title={intl->Intl.formatMessage(gettingStartedUsingSnarks)}
-            slug="snarky"
+            title={intl->Intl.formatMessage(howZkAppsWork)}
+            slug="how-zkapps-work"
           />
           <Item
-            title={intl->Intl.formatMessage(whichSnarkRightForMe)}
-            slug="constructions"
+            title={intl->Intl.formatMessage(howWriteZkApp)}
+            slug="how-to-write-a-zkapp"
           />
           <Item
-            title={intl->Intl.formatMessage(snarkyjsCryptoLibrary)}
-            slug="snarkyjs-crypto"
+            title={intl->Intl.formatMessage(zkAppsForEthereumDevelopers)}
+            slug="zkapps-for-ethereum-developers"
           />
           <Item
-            title={intl->Intl.formatMessage(snarkyUniverseLibrary)}
-            slug="snarky-universe"
+            title={intl->Intl.formatMessage(simpleAnonymousMessageBoardTutorial)}
+            slug="simple-anonymous-message-board-tutorial"
           />
+        <Item
+        title={intl->Intl.formatMessage(zkAppsAPIReference)}
+        slug="snarkyjs-reference"
+      />
         </Section>
         <Item
           title={intl->Intl.formatMessage(troubleshooting)}
@@ -601,7 +661,35 @@ module Dropdown = {
           slug={f("glossary")}
         />
         <Item title={intl->Intl.formatMessage(faq)} slug={f("faq")} />
-        <Item title={intl->Intl.formatMessage(exchangeFaq)} slug={f("exchange-faq")} />
+        <Item title={intl->Intl.formatMessage(exchangeFaq)} slug={f("exchange-operators")} />
+
+        <Section title={intl->Intl.formatMessage(participate)} slug={f("participate")}>
+          <Item
+            title={intl->Intl.formatMessage(onlineCommunities)}
+            slug="online-communities"
+          />
+          <Item
+          title={intl->Intl.formatMessage(careers)}
+          slug="careers"
+          />
+          <Section
+          title={intl->Intl.formatMessage(grants)}
+          slug={f("grants")}>
+  
+          <Item
+          title={intl->Intl.formatMessage(grantoverview)}
+          slug="grantoverview"
+          />
+          </Section>
+          <Item
+          title={intl->Intl.formatMessage(github)}
+          slug="github"
+          />
+          <Item
+          title={intl->Intl.formatMessage(reporting)}
+          slug="reporting"
+          />
+        </Section>
       </DropdownNav>
     </div>;
   };

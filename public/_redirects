@@ -4,14 +4,16 @@
 
 /                            /en
 /faq                         /en/faq
-/exchange-faq                /en/exchange-faq
+/exchange-operators                /en/exchange-operators
 /getting-started             /en/getting-started
 /snapp-credit                /en/snapp-credit
 /troubleshooting             /en/troubleshooting
 /advanced/*                  /en/advanced/:splat
 /architecture/*              /en/architecture/:splat
 /developers/*                /en/developers/:spalt
-/snarks/*                    /en/snarks/:splat
+/zkapps/*                    /en/zkapps/:splat
+/snapps/*										 /en/zkapps/:splat
+/en/snapps/*								 /en/zkapps/:splat
 /using-mina/*                /en/using-mina/:splat
 
 /node-operator               /en/using-mina/staking

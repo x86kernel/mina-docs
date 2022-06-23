@@ -26,7 +26,7 @@ Note: Windows is not officially supported at this time. However, community membe
 - at least a 8-core processor
 - at least 16GB of RAM
 
-Note that if you plan on running a snark worker node at the same time as a block producer, you may need more RAM. GPUs aren't currently required, but may be required for node operators when the protoctol is upgraded.
+Note that if you plan on running a snark worker node at the same time as a block producer, you may need more RAM. GPUs aren't currently required, but may be required for node operators when the protocol is upgraded.
 
 **Network**: At least 1 Mbps connection
 
@@ -42,27 +42,19 @@ Check out our [guide](https://youtu.be/M9lE2lgyVEo) for how to configure your Mi
 
 ## Installation
 
-The newest binary releases can be found below. Instructions are provided for macOS and Linux below:
+### Ubuntu / Debian
 
-This is a large download, around 1GB, so the install might take some time.
+Follow along below to install the latest **Stable** [Mina Release 1.3.0](https://github.com/MinaProtocol/mina/releases/tag/1.3.0) or visit the [Github Releases Page](https://github.com/MinaProtocol/mina/releases) to discover and install pre-release (Beta) builds.
 
-<Alert kind="warning">
-
-If you installed `mina` from a previous release, you'll need to upgrade it so that you won't get banned by the network for using an older client. See instructions below for upgrading both macOS and Linux builds.
-
-</Alert>
-
-### Ubuntu 18.04 / Debian 9
-
-Add the Mina Debian repo and install:
+You can set up the new debian `stable` repository and install the latest version as follows:
 
 ```
-echo "deb [trusted=yes] http://packages.o1test.net release main" | sudo tee /etc/apt/sources.list.d/mina.list
+echo "deb [trusted=yes] http://packages.o1test.net $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/mina.list
 sudo apt-get update
-sudo apt-get install -y curl unzip mina-mainnet=1.1.5-a42bdee
+sudo apt-get install -y curl unzip mina-mainnet=1.3.0-9b0369c
 ```
 
-Check that daemon installed correctly by running `mina version`. The output should read `Commit a42bdeef6b0c15ee34616e4df76c882b0c5c7c2a on branch master`.
+Check that daemon installed correctly by running `mina version`. The output should read `Commit 9b0369c27bb85c8ab2f8725c6e977eb27b53b826 on branch master`.
 
 ### Windows
 
@@ -93,7 +85,7 @@ You may need to configure your router's port forwarding to allow inbound traffic
 - `TCP` port `8302`
 - _Optionally_ to use the GraphQL service, expose `TCP` port `3085`
 
-For walk-through instructions see <DocLink copy="this guide" url="/troubleshooting#port-forwarding" />. 
+For walk-through instructions see <DocLink copy="this guide" url="/troubleshooting#port-forwarding" />.
 
 ## Next
 

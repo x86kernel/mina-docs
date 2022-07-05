@@ -55,57 +55,57 @@ client-sdk 로 서명된 트랜잭션은 [https://minaexplorer.com/broadcast-tx]
     😄 Imported account!
     Public key: B62qjaA4N9843FKM5FZk1HmeuDiojG42cbCDyZeUDQVjycULte9PFkC
 
-Additionally you can use the `mina accounts create` command to generate new accounts to send and recieve transactions.
+추가로, `mina accounts create` 명령을 통해 트랜잭션을 보내거나 받기위한 새로운 계정을 만들 수 있습니다.
 
-Since the public key is quite long and difficult to remember, let's save it as an environment variable. Use the following command but replace `<YOUR-PUBLIC-KEY>` with the public key output from the previous command:
+공개키가 기억하기에 매우 길기때문에, 환경변수에 저장해보도록 합시다. 하단의 명령을 사용하되, `<당신의 공개키>` 부분만 이전 명령의 결과에서 나온 값으로 대체합니다.
 
-    export MINA_PUBLIC_KEY=<YOUR-PUBLIC-KEY>
+    export MINA_PUBLIC_KEY=<당신의 공개키>
 
-Now we can access this everywhere as `$MINA_PUBLIC_KEY` -- check if it saved properly by trying `echo $MINA_PUBLIC_KEY`.
+이제, `$MINA_PUBLIC_KEY` 를 사용하여 공개키를 사용할 수 있습니다. (`echo $MINA_PUBLIC_KEY` 를 통해 제대로 저장되었는지 확인해보세요)
 
-Note that these environment variables will only be saved for the current shell session, so if you want to save them for future use, you can add them to `~/.profile` or `~/.bash_profile`.
+이 환경변수는 지금 사용중인 쉘의 세션에서만 유지됩니다. 혹시 영구적으로 사용하고 싶다면, `~/.profile` 이나 `~/.bash_profile` 파일에 해당 내용을 추가하면 됩니다.
 
 <Alert>
 
-If you are running the node on a cloud virtual machine, make sure to export and save the key file. You can export the key with:
+혹시 당신이 노드를 클라우드 가상 머신을 통해 실행중이라면, 키를 외부에도 저장해놓으시기 바랍니다. 아래의 명령들을 사용하면 됩니다.
 
     mina accounts export -public-key <PUBLIC-KEY> -privkey-path <EXPORT-PATH>
 
-Then save it to your local machine, maybe using [scp](https://linux.die.net/man/1/scp):
+[scp](https://linux.die.net/man/1/scp) 등을 사용해서 당신이 현재 사용중인 로컬 컴퓨터로 저장합니다.
 
     scp <EXPORT-PATH> <LOCAL-DESTINATION>
 
-Later, when starting up a new VM, you can upload the key and then import it:
+이후에, 새로운 VM 에서 노드를 실행할때 키를 다시 업로드 해서 임포트 하면 됩니다.
 
     mina accounts import -privkey-path <PRIVATE-KEY-FILE>
 
 </Alert>
 
-If you ever forget what keypairs you've already created, you can see them all with:
+혹시 생성한 키 쌍들을 잊어버린경우, 아래의 명령을 통해 생성된 키 쌍을 모두 볼 수 있습니다.
 
     mina accounts list
 
-## Check account balance
+## 계정의 잔고 확인하기
 
-We can check the balance of all our accounts using this command:
+아래의 명령으로 가지고있는 모든 계정의 잔고를 확인할 수 있습니다.
 
     mina accounts list
 
-You might see `Balance: 0 mina` for your account. Depending on the traffic in the network, it may take a few blocks before your transaction goes through.
+아마 `Balance: 0 mina` 라고 나올 수도 있습니다. 네트워크 상태에 따라 트랜잭션이 완료되기까지 몇 블록이 걸릴 수 있습니다.
 
 <Alert>
 
-Tip: You can run `mina client status` to see the current block height updating.
+팁: `mina client status` 명령을 통해 현재 블록 높이 업데이트를 확인 할 수 있습니다.
 
 </Alert>
 
-## Make a payment
+## 지불 생성
 
-Finally we get to the good stuff, sending our first transaction! Before you send a payment, you'll need to unlock your account:
+드디어 여기까지 왔습니다. 첫번째 트랜잭션을 보내봅시다! 우선 지불을 보내기 전에, 계정의 잠금을 아래의 명령으로 해제해야 합니다.
 
     mina accounts unlock -public-key $MINA_PUBLIC_KEY
 
-For testing purposes, we will specify your public key as the receiver and sender. This just means that we are sending a transaction to ourselves, you can see your public key by issuing the following command:
+테스트 목적으로, 받는이와 보낸이를 모두 당신의 공개키로 지정할 것입니다. 이것은 트랜잭션을 자기자신한테 보내는것을 의미합니다. 당신의 공개키는 아래의 명령으로 확인 할 수 있습니다.
 
 ```
 echo $MINA_PUBLIC_KEY
@@ -113,11 +113,11 @@ echo $MINA_PUBLIC_KEY
 
 <Alert kind="warning">
 
-If the recieving account has not recieved any transactions, there will be an additional Account Creation Fee of `1 MINA` that will be deducted from the transaction amount.
+혹시 받을 계정에 거래내역이 없는 경우, 계정 생성을 위한 수수료 `1 MINA` 가 필요하고, 트랜잭션 수량에서 차감될 것입니다.
 
 </Alert>
 
-Let's send some of our Mina to ourselves to see what a payment looks like:
+거래가 어떻게 되는지 확인하기 위해 본인에게 미나를 보내봅시다!
 
     mina client send-payment \
       -amount 1.5 \
@@ -125,20 +125,20 @@ Let's send some of our Mina to ourselves to see what a payment looks like:
       -fee 0.1 \
       -sender $MINA_PUBLIC_KEY
 
-If you're wondering what we passed in to the commands above:
+위 명령이 무엇을 의미하는지 궁금하다면,
 
-- For `amount`, we're sending a test value of `1.5` mina which is enough to cover the Account Creation Fee
-- The `receiver` is the public key of the account receiving the transaction, eg. `B62qjaA4N9843FKM5FZk...`
-- For `fee`, let's use 0.1 mina
-- The `sender` is the public key of the account sending the transaction, eg. `B62qjaA4N9843FKM5FZk...`
+- `amount` 는 계정 생성 수수료를 충당하기에 충분한 `1.5` 미나를 테스트 값으로 전송합니다.
+- `receiver` 는 트랜잭션을 수신할 계정의 공개키 입니다. 예. `B62qjaA4N9843FKM5FZk...`
+- `fee` 는 0.1 미나를 수수료로 사용합니다.
+- `sender` 는 트랜잭션을 보낼 계정의 공개키 입니다. 예. `B62qjaA4N9843FKM5FZk...`
 
-If this command is formatted properly, we should get a response that looks like the following:
+만약 명령을 적절하게 입력했다면, 아래의 응답과 유사한 결과를 볼 수 있을겁니다.
 
     Dispatched payment with ID 3XCgvAHLAqz9VVbU7an7f2L5ffJtZoFega7jZpVJrPCYA4j5HEmUAx51BCeMc232eBWVz6q9t62Kp2cNvQZoNCSGqJ1rrJpXFqMN6NQe7x987sAC2Sd6wu9Vbs9xSr8g1AkjJoB65v3suPsaCcvvCjyUvUs8c3eVRucH4doa2onGj41pjxT53y5ZkmGaPmPnpWzdJt4YJBnDRW1GcJeyqj61GKWcvvrV6KcGD25VEeHQBfhGppZc7ewVwi3vcUQR7QFFs15bMwA4oZDEfzSbnr1ECoiZGy61m5LX7afwFaviyUwjphtrzoPbQ2QAZ2w2ypnVUrcJ9oUT4y4dvDJ5vkUDazRdGxjAA6Cz86bJqqgfMHdMFqpkmLxCdLbj2Nq3Ar2VpPVvfn2kdKoxwmAGqWCiVhqYbTvHkyZSc4n3siGTEpTGAK9usPnBnqLi53Z2bPPaJ3PuZTMgmdZYrRv4UPxztRtmyBz2HdQSnH8vbxurLkyxK6yEwS23JSZWToccM83sx2hAAABNynBVuxagL8aNZF99k3LKX6E581uSVSw5DAJ2S198DvZHXD53QvjcDGpvB9jYUpofkk1aPvtW7QZkcofBYruePM7kCHjKvbDXSw2CV5brHVv5ZBV9DuUcuFHfcYAA2TVuDtFeNLBjxDumiBASgaLvcdzGiFvSqqnzmS9MBXxYybQcmmz1WuKZHjgqph99XVEapwTsYfZGi1T8ApahcWc5EX9
     Receipt chain hash is now A3gpLyBJGvcpMXny2DsHjvE5GaNFn2bbpLLQqTCHuY3Nd7sqy8vDbM6qHTwHt8tcfqqBkd36LuV4CC6hVH6YsmRqRp4Lzx77WnN9gnRX7ceeXdCQUVB7B2uMo3oCYxfdpU5Q2f2KzJQ46
 
-You may not see the `Receipt chain hash` on the first transaction from the account, but in following transactions, this will show you the head of the receipt chain hash list.
+계정의 첫번째 거래에서는 `Receipt chain hash` 가 표시되지 않을 수도 있는데, 다음번 트랜잭션에서는 `Receipt chain hash` 의 헤드가 표시될 것입니다.
 
-## Staking and Snarking
+## 스테이킹 & 스나킹
 
-Once you feel comfortable with the basics of creating an address, and sending & receiving mina, we can move on to the truly unique parts of the Mina network - <DocLink copy="participating in consensus and helping compress the blockchain" url="/using-mina/staking" />.
+주소 생성, 미나 주고 받기등 기본적인 사항에 익숙해지면 미나 네트워크의 진정으로 고유한 부분인 <DocLink copy="합의에 참여하고 블록체인 압축에 기여하기" url="/using-mina/staking" /> 로 넘어갈 수 있습니다.

@@ -2,31 +2,32 @@ import Page from "@reason/pages/Docs";
 import DocLink from "@reason/components/DocLink";
 export default Page({ title: "Staking & Snarking" });
 
-# Staking & Snarking
+# 스테이킹 & 스나킹
 
-Let's turn our attention to the other ways we can interact with the Mina network - namely, participating in consensus, and helping compress data by generating zk-SNARKs. By operating a node that helps secure the network, you can receive mina for your efforts.
+Mina 네트워크와 상호 작용할 수 있는 다른 방법인 합의에 참여하고 zk-SNARK를 생성하여 데이터 압축을 도울 수 있는 방법을 알아봅시다. 노드를 운영하여 네트워크의 보안에 도움을 줄 수 있고 노력에 대한 보상으로 미나를 받을 수 있습니다.
+
 
 ## Participating in Consensus
 
-The Mina network is secured by <DocLink copy="Proof-of-Stake consensus" url="/glossary#proof-of-stake" />. With this model of consensus, you don't need to have complex equipment like in Bitcoin mining. By simply having mina in our wallet, we can choose to either stake it ourselves, or delegate it to another node. Let's first see how to stake mina ourselves:
+미나 네트워크는 <DocLink copy="Proof-of-Stake 합의" url="/glossary#proof-of-stake" />에 의해 보호됩니다. 이 합의 모델을 사용하면 비트코인 채굴기와 같은 복잡한 장비가 필요하지 않습니다. 지갑에 미나를 가지고 있기만 하면 스스로 스테이킹하거나 다른 노드에 위임할 수 있습니다. 먼저 미나를 직접 스테이킹하는 방법을 살펴보겠습니다.
 
 <Alert kind="warning">
 
-To properly remain synced to the network and participate in consensus, it is important that your server is running some form of a [clock synchronization protocol](https://en.wikipedia.org/wiki/Clock_synchronization). We recommend using [NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol), which is relatively easy to setup and comes already installed as a default service on many popular linux distros.
+네트워크에 제대로 동기화된 상태를 유지하고 합의에 참여하려면 서버에서 일종의 [시간 동기화 프로토콜](https://en.wikipedia.org/wiki/Clock_synchronization)을 실행하는 것이 중요합니다. 비교적 설정이 쉽고 많은 리눅스 배포판에 기본 서비스로 설치된 [NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol)를 사용하는 것이 좋습니다.
 
 </Alert>
 
-### Staking mina
+### 미나 스테이킹
 
-We can try out staking with our mina by issuing the following command:
+다음 명령을 실행하여 가지고 있는 미나로 스테이킹을 시도할 수 있습니다.
 
     mina client set-staking -public-key $MINA_PUBLIC_KEY
 
-Alternatively, you can restart the daemon with the `-block-producer-pubkey` flag:
+아니면, `-block-producer-pubkey` 플래그를 사용하여 데몬을 다시 시작할 수도 있습니다.
 
 <DaemonCommandExample args={["-block-producer-pubkey $MINA_PUBLIC_KEY"]} />
 
-We can always check which accounts we're currently staking with, by using the `mina client status` command:
+`mina client status` 명령을 사용하여 현재 스테이킹중인 계정을 확인할 수 있습니다.
 
 ```
 mina client status
@@ -58,80 +59,80 @@ Addresses and ports:        ...
 Libp2p PeerID:              ...
 ```
 
-The `Block producers running` field in the response above returns the number of accounts currently staking, with the associated key.
+위의 응답에서 `Block producers running` 필드는 연결된 키와 함께 현재 스테이킹 중인 계정 수를 반환합니다.
 
 <Alert kind="warning">
 
-Keep in mind that if you are staking independently with funds in a account, you'll need to remain connected to the network at all times to succesfully produce blocks. If you need to go offline frequently, it may be better to delegate your stake.
+계정에 있는 자금으로 독립적으로 스테이킹하는 경우 블록을 성공적으로 생성하려면 항상 네트워크에 연결된 상태를 유지해야 합니다. 그렇지 못할 경우엔 지분을 위임하는 것이 좋습니다.
 
 </Alert>
 
-If you'd like to send your coinbase to an account other than the one that is staking, you can use the `-coinbase-receiver` flag when you start your daemon. You can even point the coinbase at a cold wallet!
+코인베이스를 스테이킹 중인 계정이 아닌 다른 계정으로 보내고 싶다면 데몬을 시작할 때 `-coinbase-receiver` 플래그를 사용할 수 있습니다. 콜드 월렛을 코인베이스로 가리킬 수도 있습니다!
 
-### Delegating mina
+### 미나 위임
 
-Delegating mina is an alternative option to staking it directly, with the benefit of not having to maintain a node that is always connected to the network.
+미나를 위임하는 것은 네트워크에 항상 연결된 노드를 유지할 필요가 없다는 이점을 가진 직접 스테이킹 하는 방법의 대안입니다.
 
-First make sure you've unlocked your account:
+먼저, 당신의 계정의 잠금을 해제해야 합니다.
 
     mina account unlock -public-key $MINA_PUBLIC_KEY
 
-And then run this command to delegate your stake:
+그 이후에, 다음 명령을 실행하여 지분을 위임합니다.
 
     mina client delegate-stake \
         -receiver <DELEGATE-PUBLIC-KEY> \
         -sender $MINA_PUBLIC_KEY \
         -fee 0.1
 
-The fields in this command:
+해당 명령의 각 필드는 아래의 내용을 의미합니다.
 
-- The `receiver` flag is the public key of the receiver of your stake delegation
-- `sender` is the public key of the account from which you want to delegate
-- `fee` is the cost to send your transaction. It is paid to the network’s block producers.
-- Note there is no _amount_ parameter. Your full Mina balance will be delegated automatically.
+- `receiver` 는 지분을 위임받을 수신자의 공개키 입니다.
+- `sender` 는 위임하려는 계정의 공개키 입니다.
+- `fee` 는 트랜잭션을 보내는 데 드는 비용입니다. 네트워크의 블록 생산자에게 지급됩니다.
+- _amount_ 매개변수가 없는것에 유의하세요. 당신이 가지고 있는 미나 잔액이 자동으로 위임됩니다.
 
-You'll notice that this command looks suspiciously like a <DocLink copy="payment" url="/my-first-transaction#make-a-payment" /> transaction. That's because a stake delegation is also a transaction! This is why we have to pay a small transaction fee in order to change this setting.
+이 명령이 <DocLink copy="결제" url="/my-first-transaction#make-a-payment" /> 트랜잭션 처럼 의심스러워 보일 수도 있습니다. 지분 위임도 트랜잭션이기 때문입니다! 이것이 약간의 트랜잭션 수수료를 지불해야 하는 이유입니다.
 
-Delegating your stake might be useful if you're interested in:
+아래의 내용에 관심이 있는 경우 지분 위임이 유용할 수 있습니다.
 
-- Running your own staking node that uses funds from a "cold wallet"
-- Delegating to a "staking pool" which will provide token payouts periodically
-- Or if you don't have enough tokens to make managing a block producer full-time worthwhile
+- "콜드 월렛"의 자금을 사용하는 자체 스테이킹 노드 실행중인 경우
+- 주기적으로 토큰 지불을 제공하는 "스테이킹 풀" 에 위임하는 경우
+- 또는, 블록 생산자를 풀타임으로 관리하는 데 충분한 토큰을 보유하고 있지 않은 경우
 
 <Alert>
 
-There is a latency period of a 2-4 weeks before your new stake delegation comes into effect
+새로운 지분 위임이 효과가 있기까지 2~4주의 지연 시간이 있습니다.
 
 </Alert>
 
-## Compressing data in the Mina network
+## 미나 네트워크에서 데이터 압축
 
-The Mina protocol is unique in that it doesn't require nodes to maintain the full history of the blockchain like other cryptocurrency protocols. By recursively using cryptographic proofs, the Mina protocol effectively compresses the blockchain to constant size. We call this compression, because it reduces terabytes of data to a few kilobytes.
+미나 프로토콜은 다른 암호화폐 프로토콜처럼 블록체인의 전체 기록을 유지하기 위해 노드가 필요하지 않다는 점에서 독특합니다. 미나 프로토콜은 암호화 증명을 재귀적으로 사용하여 블록체인을 일정한 크기로 효과적으로 압축합니다. 테라바이트의 데이터를 몇 킬로바이트로 줄이기 때문에 우리는 이것을 압축이라고 부릅니다.
 
-However, this isn't data encoding or compression in the traditional sense - rather nodes "compress" data in the network by generating cryptographic proofs. Node operators play a crucial role in this process by designating themselves as "snark-workers" that generate zk-SNARKs for transactions that have been added to blocks.
+그러나 이것은 전통적인 의미의 데이터 인코딩 또는 압축이 아니라 노드가 암호화 증명을 생성하여 네트워크에서 데이터를 "압축"합니다. 노드 운영자는 이 과정에서 중요한 역할을 하는데, 블록에 추가된 트랜잭션에 대해 zk-SNARK를 생성하는 "snark-workers" 역할을 수행합니다.
 
-You can start a snark-worker using these commands:
+다음 명령을 사용하여 snark-worker를 시작할 수 있습니다.
 
     mina client set-snark-work-fee <FEE>
     mina client set-snark-worker -address $MINA_PUBLIC_KEY
 
-Alternatively, you can restart the daemon with these flags:
+또는 다음 플래그를 사용하여 데몬을 다시 시작할 수 있습니다.
 
 <DaemonCommandExample
   args={["-run-snark-worker $MINA_PUBLIC_KEY", "-snark-worker-fee <fee>"]}
 />
 
-As a snark worker, you get to share some of the block reward for each block your compressed transactions make it in to. The block producer is responsible for gathering compressed transactions before including them into a block, and will be incentivized by the protocol to reward snark-workers.
+스나크 작업자는 압축된 트랜잭션이 들어오는 각 블록에 대해 일부 블록 보상을 공유하게 됩니다. 블록 생산자는 압축된 트랜잭션을 블록에 포함하기 전에 먼저 수집해야 하며 스나크 작업자에게 보상하기 위해 프로토콜에 의해 인센티브를 받습니다.
 
-Snark workers can be fairly compute intensive, so if you need to limit their CPU usage, you can specify the number of threads snark workers use with the `-snark-worker-parallelism` flag. This can be especially useful if you're trying to run a block producer and snark worker on the same machine and having issues producing blocks in time.
+스나크 작업자는 계산 집약적일 수 있으므로 CPU 사용량을 제한해야 하는 경우 `-snark-worker-parallelism` 플래그와 함께 스나크 작업자가 사용하는 스레드 수를 지정할 수 있습니다. 이는 블록 생산자와 스나크 작업자를 동일한 시스템에서 실행하려고 하고 제 시간에 블록을 생성하는 데 문제가 있는 경우 특히 유용할 수 있습니다.
 
-That about covers the roles and responsibilities as a Mina node operator. Since Mina is a permissionless peer-to-peer network, everything is managed and run in a decentralized manner by nodes all over the world. Similarly, the Mina project is also distributed and permissionless to join. The code is all open source, and there is much work to be done, both technical and non-technical. To learn more about how you can get involved with Mina, please check out the <DocLink copy="Contributing to Mina section" url="/developers/contributing" />.
+미나는 권한 제한이 없는 P2P 네트워크이므로 전 세계의 노드에서 모든 것이 분산된 방식으로 관리되고 실행됩니다. 마찬가지로 미나 프로젝트도 배포되며 참여 권한 제한이 없습니다. 코드는 모두 오픈 소스이며 기술 및 비기술적으로 수행해야 할 작업이 많습니다. 미나에 참여하는 방법에 대한 자세한 내용은 <DocLink copy="미나에 기여하기 섹션" url="/developers/contributing" />을 확인하세요.
 
-### Using daemon.json to configure your mina daemon
+### daemon.json 파일을 이용하여 미나 데몬 설정하기
 
-By creating a file at `~/.mina-config/daemon.json`, you can configure your mina daemon without needing to provide options on the commandline. This can be useful for running mina as a service as well as just for avoiding repetitive typing!
+`~/.mina-config/daemon.json` 파일을 생성하면 명령줄에서 옵션을 제공할 필요 없이 미나 데몬을 실행할 수 있습니다. 이것은 미나를 서비스로 실행하고 반복적인 입력을 피하기 위해 유용할 수 있습니다!
 
-Most of the options that can be passed to `mina daemon` on the commandline can also be provided as options in the config file. See `mina daemon -help` for more documentation of the options. Below is an example of usage of all the usable configuration parameters (in your file, you only need to specify the ones you want to change):
+명령줄에서 `미나 데몬`에 전달할 수 있는 대부분의 옵션은 설정 파일의 옵션으로도 제공될 수 있습니다. `mina daemon -help` 를 참고하시기 바랍니다. 아래는 사용 가능한 모든 매개변수의 사용 예 입니다. (파일에서 변경하려는 매개변수만 수정하면 됨)
 
 ```
 {
